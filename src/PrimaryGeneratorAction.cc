@@ -69,26 +69,26 @@ fParticleGun(0)
     //G4ParticleDefinition* particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("mu-");
     //G4ParticleDefinition* particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
     //G4ParticleDefinition* particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("e-");
-    G4ParticleDefinition* particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("alpha");
+    //G4ParticleDefinition* particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("alpha");
     //G4ParticleDefinition* particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("proton");
     //G4ParticleDefinition* particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("geantino");
     
-    fParticleGun->SetParticleDefinition(particleDefinition);
+    //fParticleGun->SetParticleDefinition(particleDefinition);
     
     //fParticleGun->SetParticleEnergy(1.*MeV);
     //fParticleGun->SetParticleEnergy(1.332*MeV);
     //fParticleGun->SetParticleEnergy(7.0*MeV);
     
-    //fParticleGun->SetParticleEnergy(200.*MeV);
+    fParticleGun->SetParticleEnergy(170.*MeV);
     //fParticleGun->SetParticleEnergy(22.5*MeV);
     //fParticleGun->SetParticleEnergy(50.0*MeV);
     //fParticleGun->SetParticleEnergy(4*GeV);
-    //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
     
     
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.*m,1.90*m));
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,57.5*mm,1.6*m));
-    //fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,0.));
+    fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,0.));
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,57.5*mm,2.10*m));
     
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,1.));
@@ -98,19 +98,19 @@ fParticleGun(0)
     //fParticleGun->SetParticlePosition(G4ThreeVector(-3.*m, 0., -3.8*m));
     
     
-    /*
+    
      ////////    4He, +1 charge
      G4int Z = 2, A = 4;
      
      G4double ionCharge   = 1.*eplus;
      G4double excitEnergy = 0.*MeV;
      
-     G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
-     //G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
+     //G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
+     G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
      //ion->SetPDGLifeTime(1*ns);
      fParticleGun->SetParticleDefinition(ion);
      fParticleGun->SetParticleCharge(ionCharge);
-     */
+    
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -201,7 +201,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
      */
     
     ////    Alternative Method for ISOTROPY
-    
+    /*
     G4double theta = 2*M_PI*G4UniformRand();
     //G4double mz = -1.0 + 2*G4UniformRand();
     G4double mz = -1.0 + G4UniformRand();
@@ -212,7 +212,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     my = a*sin(theta);
     
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(mx, my, mz));
-    
+    */
     
     
     /*
@@ -363,7 +363,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     //       Initial Energy Distribution of Particle
     ///////////////////////////////////////////////////
     
-    
+    /*
     //G4double InitialEnergy = G4RandGauss::shoot(((12.049-7.16192)*(0.75)), ((1.5e-3)/2.3548));
     //G4double InitialEnergy = G4RandGauss::shoot(((12.049-7.16192)*(0.75)), 0.367);
     //G4double InitialEnergy = G4RandGauss::shoot(((12.049-7.16192)*(0.75)), 0.051);
@@ -376,7 +376,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     
     
     fParticleGun->SetParticleEnergy(InitialEnergy*MeV);
-    
+    */
     
     
     

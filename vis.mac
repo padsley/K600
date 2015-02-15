@@ -35,13 +35,13 @@
 /vis/drawVolume
 #
 # Specify view angle:
-#/vis/viewer/set/viewpointThetaPhi 150. 70.
+/vis/viewer/set/viewpointThetaPhi 150. 70.
 #/vis/viewer/set/viewpointThetaPhi 90. 0.
 #
 #
 #   FOR GEOMETRY TESTING
-/vis/viewer/set/viewpointThetaPhi 90. 0.
-/vis/viewer/zoom 10
+#/vis/viewer/set/viewpointThetaPhi 90. 0.
+#/vis/viewer/zoom 10
 #/vis/viewer/panTo 0.1 0.05
 #/vis/viewer/zoom 1.5
 #
