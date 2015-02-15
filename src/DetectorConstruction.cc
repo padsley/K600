@@ -132,8 +132,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     
     ////////////////////////////
     ////    VDC SETUP
-    VDC_AllPresent_Override = false;
-    VDC_AllAbsent_Override = true;
+    VDC_AllPresent_Override = true;
+    VDC_AllAbsent_Override = false;
     
     //  VDC 1
     VDC_Presence[0] = true;
@@ -164,7 +164,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     ////    PADDLE SETUP
     
     PADDLE_AllPresent_Override = false;
-    PADDLE_AllAbsent_Override = true;
+    PADDLE_AllAbsent_Override = false;
     
     //  PADDLE 1
     PADDLE_Presence[0] = true;
@@ -203,7 +203,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     ////    TIARA SETUP
     
     TIARA_AllPresent_Override = false;
-    TIARA_AllAbsent_Override = false;
+    TIARA_AllAbsent_Override = true;
     
     //offset_TIARA_BeamAxis = -131.0000; // mm
     offset_TIARA_BeamAxis = -131.3217600; // mm
@@ -390,7 +390,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     //K600_Quadrupole_rotm2.rotateX(90*deg);
     
     //  K600 Dipole 1
-    K600_Dipole1 = false;
+    K600_Dipole1 = true;
     K600_Dipole1_BZ = -2.30*tesla;
     //K600_Dipole1_BZ = -3.30*tesla;
     K600_Dipole1_CentrePosition = G4ThreeVector(75*cm, 0.*cm,250*cm);
@@ -398,7 +398,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     K600_Dipole1_rotm.rotateY(180.*deg);
     
     //  K600 Dipole 2
-    K600_Dipole2 = false;
+    K600_Dipole2 = true;
     K600_Dipole2_BZ = -2.40*tesla;
     //K600_Dipole2_BZ = -3.40*tesla;
     K600_Dipole2_CentrePosition = G4ThreeVector(75*cm, 0.*cm,250*cm);
@@ -424,11 +424,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     
     /////////////////////////////////////
     //  K600 Target
-    K600_Target_Presence = true;
+    K600_Target_Presence = false;
     
     /////////////////////////////////////
     //  K600 Target Backing
-    K600_TargetBacking_Presence = true;
+    K600_TargetBacking_Presence = false;
     
     
     // Define materials
@@ -594,7 +594,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     
     G4LogicalVolume* LogicVacuumChamber = new G4LogicalVolume(SolidVacuumChamber, G4_Galactic_Material,"VacuumChamber",0,0,0);
     
-    
+    /*
     new G4PVPlacement(0,               // no rotation
                       positionVacuumChamber, // at (x,y,z)
                       LogicVacuumChamber,       // its logical volume
@@ -603,7 +603,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                       false,           // no boolean operations
                       0,               // copy number
                       fCheckOverlaps); // checking overlaps
-    
+    */
     
     
     
@@ -1719,6 +1719,60 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 if(j==0)
                 {
                     //////////////////////////////////////////////
+                    //      VDC - X WIRES
+                    for(G4int k=0; k<198; k++)
+                    {
+                        offset_VDC_X_WIRE = G4ThreeVector( ( (k*4.) - 394.)*mm, 0.*mm, (4000. - 20./2)*um);
+                        VDC_X_WIRE_transform = G4Transform3D(VDC_X_WIRE_rotm, offset_VDC_X_WIRE);
+                        
+                        PhysiVDC_X_WIRE = new G4PVPlacement(VDC_X_WIRE_transform,
+                                                            Logic_VDC_X_WIRE,
+                                                            "VDC_X_WIRE",
+                                                            Logic_VDC_SenseRegion_USDS[i][j],
+                                                            false,    // no boolean operations
+                                                            i*198 + k,    // copy number
+                                                            fCheckOverlaps); // checking overlaps
+                        
+                    }
+                    
+                    //////////////////////////////////////////////
+                    //      VDC - X GUARD WIRES
+                    for(G4int k=0; k<199; k++)
+                    {
+                        offset_VDC_X_WIRE = G4ThreeVector( ( (k*4.) - 396.)*mm, 0.*mm, (4000. - 20./2)*um);
+                        VDC_X_WIRE_transform = G4Transform3D(VDC_X_WIRE_rotm, offset_VDC_X_WIRE);
+                        
+                        new G4PVPlacement(VDC_X_WIRE_transform,
+                                          Logic_VDC_X_GUARDWIRE,
+                                          "VDC_X_GUARDWIRE",
+                                          Logic_VDC_SenseRegion_USDS[i][j],
+                                          false,    // no boolean operations
+                                          i*199 + k,    // copy number
+                                          fCheckOverlaps); // checking overlaps
+                        
+                    }
+                    
+                    //////////////////////////////////////////////
+                    //      VDC - X GUARD WIRES, Thick
+                    for(G4int k=0; k<2; k++)
+                    {
+                        offset_VDC_X_WIRE = G4ThreeVector( ( (k*2.*398.) - 398.)*mm, 0.*mm, (4000. - 20./2)*um);
+                        VDC_X_WIRE_transform = G4Transform3D(VDC_X_WIRE_rotm, offset_VDC_X_WIRE);
+                        
+                        new G4PVPlacement(VDC_X_WIRE_transform,
+                                          Logic_VDC_X_GUARDWIRE_Thick,
+                                          "VDC_X_GUARDWIRE_Thick",
+                                          Logic_VDC_SenseRegion_USDS[i][j],
+                                          false,    // no boolean operations
+                                          i*2 + k,    // copy number
+                                          fCheckOverlaps);
+                        
+                    }
+                }
+                
+                if(j==1)
+                {
+                    //////////////////////////////////////////////
                     //      VDC - U WIRES
                     for(G4int k=0; k<143; k++)
                     {
@@ -1772,59 +1826,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                     }
                 }
                 
-                if(j==1)
-                {
-                    //////////////////////////////////////////////
-                    //      VDC - X WIRES
-                    for(G4int k=0; k<198; k++)
-                    {
-                        offset_VDC_X_WIRE = G4ThreeVector( ( (k*4.) - 394.)*mm, 0.*mm, (4000. - 20./2)*um);
-                        VDC_X_WIRE_transform = G4Transform3D(VDC_X_WIRE_rotm, offset_VDC_X_WIRE);
-                        
-                        PhysiVDC_X_WIRE = new G4PVPlacement(VDC_X_WIRE_transform,
-                                                            Logic_VDC_X_WIRE,
-                                                            "VDC_X_WIRE",
-                                                            Logic_VDC_SenseRegion_USDS[i][j],
-                                                            false,    // no boolean operations
-                                                            i*198 + k,    // copy number
-                                                            fCheckOverlaps); // checking overlaps
-                        
-                    }
-                    
-                    //////////////////////////////////////////////
-                    //      VDC - X GUARD WIRES
-                    for(G4int k=0; k<199; k++)
-                    {
-                        offset_VDC_X_WIRE = G4ThreeVector( ( (k*4.) - 396.)*mm, 0.*mm, (4000. - 20./2)*um);
-                        VDC_X_WIRE_transform = G4Transform3D(VDC_X_WIRE_rotm, offset_VDC_X_WIRE);
-                        
-                        new G4PVPlacement(VDC_X_WIRE_transform,
-                                          Logic_VDC_X_GUARDWIRE,
-                                          "VDC_X_GUARDWIRE",
-                                          Logic_VDC_SenseRegion_USDS[i][j],
-                                          false,    // no boolean operations
-                                          i*199 + k,    // copy number
-                                          fCheckOverlaps); // checking overlaps
-                        
-                    }
-                    
-                    //////////////////////////////////////////////
-                    //      VDC - X GUARD WIRES, Thick
-                    for(G4int k=0; k<2; k++)
-                    {
-                        offset_VDC_X_WIRE = G4ThreeVector( ( (k*2.*398.) - 398.)*mm, 0.*mm, (4000. - 20./2)*um);
-                        VDC_X_WIRE_transform = G4Transform3D(VDC_X_WIRE_rotm, offset_VDC_X_WIRE);
-                        
-                        new G4PVPlacement(VDC_X_WIRE_transform,
-                                          Logic_VDC_X_GUARDWIRE_Thick,
-                                          "VDC_X_GUARDWIRE_Thick",
-                                          Logic_VDC_SenseRegion_USDS[i][j],
-                                          false,    // no boolean operations
-                                          i*2 + k,    // copy number
-                                          fCheckOverlaps);
-                        
-                    }
-                }
             }
         }
     }
