@@ -112,21 +112,34 @@ RunAction::RunAction()
     // Creating ntuple
     analysisManager->CreateNtuple("DataTreeSim", "K600 Spectrometer - Coincident Events");
     
-    /*
-     ////    VDC Detectors
-     analysisManager->CreateNtupleDColumn(0, "VDC1_Xpos");
-     analysisManager->CreateNtupleDColumn(0, "VDC1_Y");
-     analysisManager->CreateNtupleDColumn(0, "VDC1_ThetaFP");
-     analysisManager->CreateNtupleDColumn(0, "VDC1_ThetaSCAT");
+    
+    ////    VDC Detectors
+    analysisManager->CreateNtupleDColumn(0, "VDC1_Xpos");
+    analysisManager->CreateNtupleDColumn(0, "VDC1_Y");
+    analysisManager->CreateNtupleDColumn(0, "VDC1_ThetaFP");
+    analysisManager->CreateNtupleDColumn(0, "VDC1_ThetaSCAT");
      
      
-     analysisManager->CreateNtupleDColumn(0, "VDC2_Xpos");
-     analysisManager->CreateNtupleDColumn(0, "VDC2_Y");
-     analysisManager->CreateNtupleDColumn(0, "VDC2_ThetaFP");
-     analysisManager->CreateNtupleDColumn(0, "VDC2_ThetaSCAT");
-     */
+    analysisManager->CreateNtupleDColumn(0, "VDC2_Xpos");
+    analysisManager->CreateNtupleDColumn(0, "VDC2_Y");
+    analysisManager->CreateNtupleDColumn(0, "VDC2_ThetaFP");
+    analysisManager->CreateNtupleDColumn(0, "VDC2_ThetaSCAT");
+    
+    ////    "True points of traversal"
+    ////    VDC1
+    analysisManager->CreateNtupleDColumn(0, "X1_Xpos");
+    analysisManager->CreateNtupleDColumn(0, "X1_Ypos");
+    analysisManager->CreateNtupleDColumn(0, "U1_Xpos");
+    analysisManager->CreateNtupleDColumn(0, "U1_Ypos");
+    ////    VDC2
+    analysisManager->CreateNtupleDColumn(0, "X2_Xpos");
+    analysisManager->CreateNtupleDColumn(0, "X2_Ypos");
+    analysisManager->CreateNtupleDColumn(0, "U2_Xpos");
+    analysisManager->CreateNtupleDColumn(0, "U2_Ypos");
+    
     
     ////    TIARA Detectors
+    /*
     analysisManager->CreateNtupleIColumn(0, "TIARANo");
     analysisManager->CreateNtupleIColumn(0, "TIARA_RowNo");
     analysisManager->CreateNtupleIColumn(0, "TIARA_SectorNo");
@@ -134,6 +147,7 @@ RunAction::RunAction()
     analysisManager->CreateNtupleDColumn(0, "TIARAE");
     analysisManager->CreateNtupleDColumn(0, "Theta");
     analysisManager->CreateNtupleDColumn(0, "Phi");
+    */
     
     //analysisManager->CreateNtupleDColumn("TIARANo[2]");
     //analysisManager->CreateNtupleDColumn("TIARA_RowNo[2]");
