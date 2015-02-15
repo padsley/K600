@@ -80,6 +80,7 @@ private:
     G4int       WireChamberNo;
     G4int       hit_StoredChannelNo;
     
+    
     //  Local Position
     G4double    xPosL;
     G4double    yPosL;

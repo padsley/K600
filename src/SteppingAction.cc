@@ -156,9 +156,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //              VDC DETECTORS
     ////////////////////////////////////////////////
     
-    if (interactiontime < VDC_TotalSampledTime)
+    if(interactiontime < VDC_TotalSampledTime)
     {
-        if (volumeName == "VDC_SenseRegion_USDS")
+        if(volumeName == "VDC_SenseRegion_USDS")
         {
             WireChamberNo = volume->GetCopyNo();
             
@@ -168,15 +168,77 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             worldPosition = preStepPoint->GetPosition();
             localPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(worldPosition);
             
+            G4int cellNo = 0;
+            G4int bufferNo = 0;
+            G4bool CompletedVDCFilling = false;
             
-            //  U WireChamber
+            
+            //  X WireChamber
             if( (WireChamberNo==0) || (WireChamberNo==2) )
             {
                 xPosL = localPosition.x()/mm;
                 yPosL = localPosition.y()/mm;
                 zPosL = localPosition.z()/mm + 4.0;
                 
-                if(abs(zPosL)>8) goto skip_CompletedVDCFilling;
+                if(abs(zPosL)>8) CompletedVDCFilling = true;
+                
+                while(cellNo<198 && !CompletedVDCFilling)
+                {
+                    if( (xPosL > (-99+cellNo)*4) && (xPosL <= (-98+cellNo)*4) )
+                    {
+                        if(WireChamberNo==0) channelID = cellNo;
+                        if(WireChamberNo==2) channelID = cellNo + 341;
+                        //G4cout << "Here is the WireChamberNo     -->     "<< WireChamberNo << G4endl;
+                        //G4cout << "Here is the X WireChamber Triggered Cell     -->     "<< i << G4endl;
+                        //fEventAction->FillVDC_Observables(channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
+                        
+                        while(bufferNo<hit_buffersize && !CompletedVDCFilling)
+                        {
+                            hit_StoredChannelNo = fEventAction->GetVDC_ObservablesChannelID(bufferNo);
+                            
+                            if( (hit_StoredChannelNo < 0) || (hit_StoredChannelNo == channelID) )
+                            {
+                                fEventAction->FillVDC_Observables(bufferNo, channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
+                                
+                                CompletedVDCFilling = true;
+                            }
+                            
+                            bufferNo++;
+                        }
+                    }
+                    
+                    cellNo++;
+                }
+            }
+            
+            /*
+             
+             ////////////////    Wire channel mapping for the case when the U wireframe is upstream of the X wireframe
+             ////    VDC 1
+             if(VDCNo==0 && XU_Wireplane==0) wireChannelMin = 0, wireChannelMax = 142, wireOffset = 0, EnergyThreshold = VDC1_U_WIRE_ThresholdEnergy;
+             if(VDCNo==0 && XU_Wireplane==1) wireChannelMin = 143, wireChannelMax = 340, wireOffset = 143, EnergyThreshold = VDC1_X_WIRE_ThresholdEnergy;
+             
+             ////    VDC 2
+             if(VDCNo==1 && XU_Wireplane==0) wireChannelMin = 341, wireChannelMax = 483, wireOffset = 341, EnergyThreshold = VDC2_U_WIRE_ThresholdEnergy;
+             if(VDCNo==1 && XU_Wireplane==1) wireChannelMin = 484, wireChannelMax = 681, wireOffset = 484, EnergyThreshold = VDC2_X_WIRE_ThresholdEnergy;
+             
+             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+             if(VDCNo==0 && XU_Wireplane==0) wireChannelMin = 0, wireChannelMax = 197, wireOffset = 0, EnergyThreshold = VDC1_X_WIRE_ThresholdEnergy;
+             if(VDCNo==0 && XU_Wireplane==1) wireChannelMin = 198, wireChannelMax = 340, wireOffset = 143, EnergyThreshold = VDC1_U_WIRE_ThresholdEnergy;
+             
+             ////    VDC 2
+             if(VDCNo==1 && XU_Wireplane==0) wireChannelMin = 341, wireChannelMax = 538, wireOffset = 341, EnergyThreshold = VDC2_X_WIRE_ThresholdEnergy;
+             if(VDCNo==1 && XU_Wireplane==1) wireChannelMin = 539, wireChannelMax = 681, wireOffset = 484, EnergyThreshold = VDC2_U_WIRE_ThresholdEnergy;
+             */
+            
+            //  U WireChamber
+            if( (WireChamberNo==1) || (WireChamberNo==3) )
+            {
+                xPosL = localPosition.x()/mm;
+                yPosL = localPosition.y()/mm;
+                zPosL = localPosition.z()/mm - 4.0;
+                
+                if(abs(zPosL)>8) CompletedVDCFilling = true;
                 
                 /*
                  if(yPosL<=(-131/2 -3.) || yPosL>=(131/2 -3.))
@@ -187,26 +249,32 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 
                 xOffset = -(1/tan(50))*yPosL;
                 
-                for(G4int i=0; i<143; i++)
+                while(cellNo<143 && !CompletedVDCFilling)
                 {
-                    if( (xPosL > (-71.5+i)*abs(xShift) + xOffset) && (xPosL <= (-70.5+i)*abs(xShift) + xOffset) )
+                    if( (xPosL > (-71.5+cellNo)*abs(xShift) + xOffset) && (xPosL <= (-70.5+cellNo)*abs(xShift) + xOffset) )
                     {
-                        if(WireChamberNo==0) channelID = i;
-                        if(WireChamberNo==2) channelID = i + 341;
+                        if(WireChamberNo==1) channelID = cellNo + 198;
+                        if(WireChamberNo==3) channelID = cellNo + 539;
                         
-                        for(G4int k=0; k<hit_buffersize; k++)
+                        //for(G4int k=0; k<hit_buffersize; k++)
+                        while(bufferNo<hit_buffersize && !CompletedVDCFilling)
                         {
-                            hit_StoredChannelNo = fEventAction->GetVDC_ObservablesChannelID(k);
+                            hit_StoredChannelNo = fEventAction->GetVDC_ObservablesChannelID(bufferNo);
                             
                             if( (hit_StoredChannelNo < 0) || (hit_StoredChannelNo == channelID) )
                             {
-                                fEventAction->FillVDC_Observables(k, channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
+                                fEventAction->FillVDC_Observables(bufferNo, channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
                                 
-                                goto skip_CompletedVDCFilling;
+                                CompletedVDCFilling = true;
                             }
+                            
+                            bufferNo++;
                         }
                     }
+                    
+                    cellNo++;
                 }
+                
             }
             
             /*
@@ -222,40 +290,62 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              }
              */
             
-            //  X WireChamber
-            if( (WireChamberNo==1) || (WireChamberNo==3) )
+            
+            
+            
+            ////    The PRE-point
+            if(zPosL<0. && aStep->GetTrack()->GetParentID()==0)
             {
-                xPosL = localPosition.x()/mm;
-                zPosL = localPosition.z()/mm - 4.0;
+                //G4cout << "Here we are in the Stepping Action 1" << G4endl;
+
+                fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 0, 0, xPosL);
+                fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 0, 1, yPosL);
+                fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 0, 2, zPosL);
+
+                /*
+                WireplaneTraversePos[WireChamberNo][0][0] = xPosL;
+                WireplaneTraversePos[WireChamberNo][0][1] = yPosL;
+                WireplaneTraversePos[WireChamberNo][0][2] = zPosL;
+                 */
                 
-                if(abs(zPosL)>8) goto skip_CompletedVDCFilling;
+            }
+
+            ////    The POST-point
+            if(zPosL>0. && aStep->GetTrack()->GetParentID()==0 && fEventAction->GetVDC_WireplaneTraversePOST(WireChamberNo)==false)
+            {
+                //G4cout << "Here we are in the Stepping Action 2" << G4endl;
+
+                fEventAction->SetVDC_WireplaneTraversePOST(WireChamberNo, true);
                 
-                for(G4int i=0; i<198; i++)
-                {
-                    if( (xPosL > (-99+i)*4) && (xPosL <= (-98+i)*4) )
-                    {
-                        if(WireChamberNo==1) channelID = i + 143;
-                        if(WireChamberNo==3) channelID = i + 484;
-                        //G4cout << "Here is the WireChamberNo     -->     "<< WireChamberNo << G4endl;
-                        //G4cout << "Here is the X WireChamber Triggered Cell     -->     "<< i << G4endl;
-                        //fEventAction->FillVDC_Observables(channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
-                        
-                        
-                        for(G4int k=0; k<hit_buffersize; k++)
-                        {
-                            hit_StoredChannelNo = fEventAction->GetVDC_ObservablesChannelID(k);
-                            
-                            if( (hit_StoredChannelNo < 0) || (hit_StoredChannelNo == channelID) )
-                            {
-                                fEventAction->FillVDC_Observables(k, channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
-                                
-                                goto skip_CompletedVDCFilling;
-                            }
-                        }
-                    }
-                }
+                fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 1, 0, xPosL);
+                fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 1, 1, yPosL);
+                fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 1, 2, zPosL);
+                
+                /*
+                WireplaneTraversePOST[WireChamberNo] = true;
+                WireplaneTraversePos[WireChamberNo][0][0] = xPosL;
+                WireplaneTraversePos[WireChamberNo][0][1] = yPosL;
+                WireplaneTraversePos[WireChamberNo][0][2] = zPosL;
+                */
             }
             
+            
+            /*
+            void SetVDC_WireplaneTraversePos(G4int WireplaneNumber, G4int i, G4int component, G4double componentPosition)
+            {
+                WireplaneTraversePos[WireplaneNumber][i][component] = componentPosition;
+            }
+            
+            ////    WireplaneTraversePOST[A]
+            ////    A -> Wireplane Number
+            ////    True implies that the POST point has been accounted for, False it is unnacounted for
+            G4bool      WireplaneTraversePOST[4];
+            
+            void SetVDC_WireplaneTraversePOST(G4int WireplaneNumber, G4bool decision)
+            {
+                WireplaneTraversePOST[WireplaneNumber] = decision;
+            }
+            */
             
             
             /*
@@ -266,18 +356,20 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              //if(fEventAction->Get_PADDLE_Trig(i) == false) fEventAction->Set_PADDLE_Trig(i, true);
              */
             
+            
+            
+
         }
     }
     
-skip_CompletedVDCFilling:
     
     ////////////////////////////////////////////////
     //              PADDLE DETECTORS
     ////////////////////////////////////////////////
     
-    if (interactiontime < PADDLE_TotalSampledTime)
+    if(interactiontime < PADDLE_TotalSampledTime)
     {
-        if (volumeName == "PADDLE")
+        if(volumeName == "PADDLE")
         {
             channelID = volume->GetCopyNo();
             
@@ -306,7 +398,7 @@ skip_CompletedVDCFilling:
     
     if(interactiontime < CLOVER_TotalSampledTime)
     {
-        if (volumeName == "CLOVER_HPGeCrystal")
+        if(volumeName == "CLOVER_HPGeCrystal")
         {
             channelID = volume->GetCopyNo();
             
@@ -328,13 +420,13 @@ skip_CompletedVDCFilling:
     }
     
     /*
-     if (interactiontime < CLOVER_Shield_BGO_TotalSampledTime)
+     if(interactiontime < CLOVER_Shield_BGO_TotalSampledTime)
      {
      for(G4int i=0; i<8; i++)
      {
      for(G4int l=0; l<16; l++)
      {
-     if ( volume == fDetConstruction->GetVolume_CLOVER_Shield_BGOCrystal(i, l) && interactiontime <     CLOVER_Shield_BGO_TotalSampledTime )
+     if( volume == fDetConstruction->GetVolume_CLOVER_Shield_BGOCrystal(i, l) && interactiontime <     CLOVER_Shield_BGO_TotalSampledTime )
      {
      CLOVER_BGO_ITS = interactiontime/CLOVER_Shield_BGO_SamplingTime;
      edepCLOVER_BGOCrystal = aStep->GetTotalEnergyDeposit()/keV;
@@ -348,7 +440,7 @@ skip_CompletedVDCFilling:
      */
     
     
-    //if (volumeName=="TIARA_Assembly" && !fEventAction->GA_GetLineOfSight() )   G4cout << "Here is the TIARA_Assembly Hit!" << G4endl;
+    //if(volumeName=="TIARA_Assembly" && !fEventAction->GA_GetLineOfSight() )   G4cout << "Here is the TIARA_Assembly Hit!" << G4endl;
     
     ////////////////////////////////////////////
     //              TIARA ARRAY
@@ -429,7 +521,7 @@ skip_CompletedVDCFilling:
     
     
     ////    Here, one declares the volumes that one considers will block the particles of interest and effectively mask the relevant volume of interest.
-    if (GA_LineOfSightMODE && (volumeName == "TIARA_AA_RS" || volumeName=="TIARA_PCB" || volumeName=="TIARA_SiliconWafer"))
+    if(GA_LineOfSightMODE && (volumeName == "TIARA_AA_RS" || volumeName=="TIARA_PCB" || volumeName=="TIARA_SiliconWafer"))
     {
         //G4cout << "Here is the volumeName    "<< volumeName << G4endl;
         fEventAction->GA_SetLineOfSight(false);
@@ -450,15 +542,15 @@ skip_CompletedVDCFilling:
      
      // step length
      G4double stepLength = 0.;
-     if ( step->GetTrack()->GetDefinition()->GetPDGCharge() != 0. ) {
+     if( step->GetTrack()->GetDefinition()->GetPDGCharge() != 0. ) {
      stepLength = step->GetStepLength();
      }
      
-     if ( volume == fDetConstruction->GetAbsorberPV() ) {
+     if( volume == fDetConstruction->GetAbsorberPV() ) {
      fEventAction->AddAbs(edep,stepLength);
      }
      
-     if ( volume == fDetConstruction->GetGapPV() ) {
+     if( volume == fDetConstruction->GetGapPV() ) {
      fEventAction->AddGap(edep,stepLength);
      }
      */
