@@ -211,26 +211,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 }
             }
             
-            /*
-             
-             ////////////////    Wire channel mapping for the case when the U wireframe is upstream of the X wireframe
-             ////    VDC 1
-             if(VDCNo==0 && XU_Wireplane==0) wireChannelMin = 0, wireChannelMax = 142, wireOffset = 0, EnergyThreshold = VDC1_U_WIRE_ThresholdEnergy;
-             if(VDCNo==0 && XU_Wireplane==1) wireChannelMin = 143, wireChannelMax = 340, wireOffset = 143, EnergyThreshold = VDC1_X_WIRE_ThresholdEnergy;
-             
-             ////    VDC 2
-             if(VDCNo==1 && XU_Wireplane==0) wireChannelMin = 341, wireChannelMax = 483, wireOffset = 341, EnergyThreshold = VDC2_U_WIRE_ThresholdEnergy;
-             if(VDCNo==1 && XU_Wireplane==1) wireChannelMin = 484, wireChannelMax = 681, wireOffset = 484, EnergyThreshold = VDC2_X_WIRE_ThresholdEnergy;
-             
-             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-             if(VDCNo==0 && XU_Wireplane==0) wireChannelMin = 0, wireChannelMax = 197, wireOffset = 0, EnergyThreshold = VDC1_X_WIRE_ThresholdEnergy;
-             if(VDCNo==0 && XU_Wireplane==1) wireChannelMin = 198, wireChannelMax = 340, wireOffset = 143, EnergyThreshold = VDC1_U_WIRE_ThresholdEnergy;
-             
-             ////    VDC 2
-             if(VDCNo==1 && XU_Wireplane==0) wireChannelMin = 341, wireChannelMax = 538, wireOffset = 341, EnergyThreshold = VDC2_X_WIRE_ThresholdEnergy;
-             if(VDCNo==1 && XU_Wireplane==1) wireChannelMin = 539, wireChannelMax = 681, wireOffset = 484, EnergyThreshold = VDC2_U_WIRE_ThresholdEnergy;
-             */
-            
             //  U WireChamber
             if( (WireChamberNo==1) || (WireChamberNo==3) )
             {
@@ -239,13 +219,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 zPosL = localPosition.z()/mm - 4.0;
                 
                 if(abs(zPosL)>8) CompletedVDCFilling = true;
-                
-                /*
-                 if(yPosL<=(-131/2 -3.) || yPosL>=(131/2 -3.))
-                 {
-                 G4cout << "Here is the yPosL in the U-Wireplane    -->     "<< yPosL << G4endl;
-                 }
-                 */
                 
                 xOffset = -(1/tan(50))*yPosL;
                 

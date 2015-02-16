@@ -50,6 +50,8 @@ class EventAction;
 /// lengths of charged particles in Absober and Gap layers and
 /// updated in EventAction.
 
+const G4double xShift = 4*(cos(40) + tan(40)*cos(50));
+
 class SteppingAction : public G4UserSteppingAction
 {
 public:
@@ -91,7 +93,6 @@ private:
     G4double    yPosW;
     G4double    zPosW;
     
-    G4double    xShift = 4*(cos(40) + tan(40)*cos(50));
     G4double    xOffset;
     
     ////    TIARA DETECTOR
