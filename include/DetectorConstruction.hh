@@ -210,7 +210,12 @@ private:
     G4RotationMatrix    TIARA_SiliconWafer_rotm;
     G4Transform3D       TIARA_SiliconWafer_transform;
     
-    
+    //  KAPTON Window
+	G4Transform3D KAPTON_Window_transform;
+
+	// Air Gap
+	G4Transform3D Air_Gap_transform;
+
     ///////////////////////////////
     //      PADDLE DETECTORS
     ///////////////////////////////

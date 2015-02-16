@@ -145,7 +145,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     
     //  VDC 2
     VDC_Presence[1] = false;
-    VDC_CentrePositionX[1] = 531.23; // cm
+    VDC_CentrePositionX[1] = 511.23; // cm
     VDC_CentrePositionZ[1] = 337.40; // cm
     VDC_CentrePosition[1] = G4ThreeVector(VDC_CentrePositionX[1]*cm - 200.*cm, 0., VDC_CentrePositionZ[1]*cm - 100.*cm);
     VDC_RotationY[1] = -14.03; // deg;
@@ -390,7 +390,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     //K600_Quadrupole_rotm2.rotateX(90*deg);
     
     //  K600 Dipole 1
-    K600_Dipole1 = true;
+    K600_Dipole1 = false;
     K600_Dipole1_BZ = -2.30*tesla;
     //K600_Dipole1_BZ = -3.30*tesla;
     K600_Dipole1_CentrePosition = G4ThreeVector(75*cm, 0.*cm,250*cm);
@@ -398,7 +398,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     K600_Dipole1_rotm.rotateY(180.*deg);
     
     //  K600 Dipole 2
-    K600_Dipole2 = true;
+    K600_Dipole2 = false;
     K600_Dipole2_BZ = -2.40*tesla;
     //K600_Dipole2_BZ = -3.40*tesla;
     K600_Dipole2_CentrePosition = G4ThreeVector(75*cm, 0.*cm,250*cm);
@@ -1347,7 +1347,78 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         }
     }
     
+    //////////////////////////////////////
+    //          KAPTON WINDOW           //
+    //////////////////////////////////////
+
+	G4Box* Kapton_Exit_Window = new G4Box("Kapton_Exit_Window_Box",(809./2.)*mm,(100./2.)*mm,(75./2.)*um);
+    G4Element *elH=new G4Element("Hydrogen","H2",1.,1.01*g/mole);
+    G4Element *elC=new G4Element("Carbon","C",6.,12.01*g/mole);
+    G4Element *elN=new G4Element("Nitrogen","N2",7.,14.01*g/mole);
+    G4Element *elO=new G4Element("Oxygen","O2",8.,16.*g/mole);
+
+	G4Material *Kapton = new G4Material("Kapton",1.43*g/cm3, 4);
+  	Kapton->AddElement(elH, 0.0273);
+  	Kapton->AddElement(elC, 0.7213);
+  	Kapton->AddElement(elN, 0.0765);
+  	Kapton->AddElement(elO, 0.1749);
+
+	G4LogicalVolume * Logic_Kapton_Exit_Window = new G4LogicalVolume(Kapton_Exit_Window,Kapton,"Logic_Kapton_Exit_Window",0,0,0);
+
+	//G4ThreeVector offset_KAPTON_Window = VDC_CentrePosition[0] + G4ThreeVector((5.0*cm+(78./2.)*mm + (75./2.)*um)*sin(14.03*deg), 0., (5.0*cm+(78./2.)*mm + (75./2.)*um)*cos(14.03*deg));
+
+	G4ThreeVector offset_KAPTON_Window = VDC_CentrePosition[0] + G4ThreeVector((50000. + 78000./2. + 75./2. + 20000.)*um * sin(14.03*deg), 0., (50000. + 78000./2. + 75./2. + 20000.)*um * cos(14.03*deg));
+
+	//G4ThreeVector offset_KAPTON_Window = VDC_CentrePosition[0] + G4ThreeVector(0,10*cm,0);
+
     
+    G4RotationMatrix rm_KAPTON_Window;
+    rm_KAPTON_Window.rotateY(-14.03*deg);
+
+    KAPTON_Window_transform = G4Transform3D(rm_KAPTON_Window, offset_KAPTON_Window);
+
+	
+
+	// KAPTON WINDOW PLACEMENT
+	new G4PVPlacement(KAPTON_Window_transform, // transformation
+                      Logic_Kapton_Exit_Window,
+                      "Physical_KAPTON_Window",
+                      LogicWorld,
+                      false,           // no boolean
+					  0,               // copy number
+                      fCheckOverlaps); // checking overlaps
+
+
+	//////////////////////////////////////
+    //              AIR GAP             //
+    //////////////////////////////////////
+
+	G4Box *Air_Gap = new G4Box("Air_Gap",(809./2.)*mm,(100./2.)*mm,(5./2)*cm);
+	
+	G4LogicalVolume *Logic_Air_Gap = new G4LogicalVolume(Air_Gap,G4_AIR_Material,"Logic_Air_Gap",0,0,0);
+
+	//AIR GAP PLACEMENT
+	G4ThreeVector offset_Air_Gap = VDC_CentrePosition[0] + G4ThreeVector((2.5*cm+(78./2.)*mm)*sin(14.03*deg), 0., (2.5*cm+(78./2.)*mm)*cos(14.03*deg));
+
+	//G4ThreeVector offset_KAPTON_Window = VDC_CentrePosition[0] + G4ThreeVector(0,10*cm,0);
+
+    
+    G4RotationMatrix rm_Air_Gap;
+    rm_Air_Gap.rotateY(-14.03*deg);
+
+    Air_Gap_transform = G4Transform3D(rm_Air_Gap, offset_Air_Gap);
+
+	// KAPTON WINDOW PLACEMENT
+	new G4PVPlacement(Air_Gap_transform, // transformation
+                      Logic_Air_Gap,
+                      "Physical_Air_Gap",
+                      LogicWorld,
+                      false,           // no boolean
+					  0,               // copy number
+                      fCheckOverlaps); // checking overlaps
+
+
+
     //////////////////////////////////////
     //          VDC DEFINITION          //
     //////////////////////////////////////

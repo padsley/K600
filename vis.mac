@@ -1,9 +1,9 @@
 # Use these open statements to open selected visualization
 #
 # Use this open statement to create an OpenGL view:
-/vis/open OGL 800x600-0+0
+#/vis/open OGL 800x600-0+0
 # Use to the the lighting origin
-/vis/viewer/set/lightsThetaPhi 40 140
+#/vis/viewer/set/lightsThetaPhi 40 140
 #
 #
 /run/printProgress 10000
@@ -35,7 +35,7 @@
 /vis/drawVolume
 #
 # Specify view angle:
-/vis/viewer/set/viewpointThetaPhi 150. 70.
+#/vis/viewer/set/viewpointThetaPhi 150. 70.
 #/vis/viewer/set/viewpointThetaPhi 90. 0.
 #
 #
@@ -47,7 +47,7 @@
 #
 #
 # Specify view camera position PANNING:
-#/vis/viewer/panTo -0.55 0.1
+/vis/viewer/panTo 0. 0.
 #
 # Specify zoom value:
 #/vis/viewer/zoom 1.4

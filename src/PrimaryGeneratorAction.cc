@@ -83,12 +83,12 @@ fParticleGun(0)
     //fParticleGun->SetParticleEnergy(22.5*MeV);
     //fParticleGun->SetParticleEnergy(50.0*MeV);
     //fParticleGun->SetParticleEnergy(4*GeV);
-    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-    
+    //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(cos(14.03+35.), 0., sin(+35.)));
     
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.*m,1.90*m));
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,57.5*mm,1.6*m));
-    fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,0.));
+    fParticleGun->SetParticlePosition(G4ThreeVector((481.93-200.-50.)*cm, 0.*cm, (352.050-50.)*cm));
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,57.5*mm,2.10*m));
     
     //fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,1.));
@@ -99,18 +99,26 @@ fParticleGun(0)
     
     
     
-     ////////    4He, +1 charge
-     G4int Z = 2, A = 4;
+    ////////    4He, +1 charge
+    G4int Z = 2, A = 4;
      
-     G4double ionCharge   = 1.*eplus;
-     G4double excitEnergy = 0.*MeV;
+    G4double ionCharge   = 1.*eplus;
+    G4double excitEnergy = 0.*MeV;
      
-     //G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
-     G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
-     //ion->SetPDGLifeTime(1*ns);
-     fParticleGun->SetParticleDefinition(ion);
-     fParticleGun->SetParticleCharge(ionCharge);
+    //G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
+    G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
+    //ion->SetPDGLifeTime(1*ns);
+    fParticleGun->SetParticleDefinition(ion);
+    fParticleGun->SetParticleCharge(ionCharge);
+
     
+     /*
+    VDC_CentrePositionX[0] = 481.93; // cm
+    VDC_CentrePositionZ[0] = 352.050; // cm
+    VDC_CentrePosition[0] = G4ThreeVector(VDC_CentrePositionX[0]*cm - 200.*cm, 0., VDC_CentrePositionZ[0]*cm - 100.*cm);
+    VDC_RotationY[0] = -14.03; // deg;
+    VDC_rotm[0].rotateY(VDC_RotationY[0]*deg);
+     */
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -351,12 +359,12 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     ///////////////////////////////////////////////////
     //       Initial Position Distribution of Particle
     ///////////////////////////////////////////////////
-    
+    /*
     G4double targetThickness = 2.42; // um
     G4double InitialPosition = G4RandFlat::shoot(-(targetThickness/2), (targetThickness/2)); // um
     
     fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., InitialPosition*um));
-    
+    */
     
     
     ///////////////////////////////////////////////////
