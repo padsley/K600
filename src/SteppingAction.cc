@@ -249,89 +249,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 }
                 
             }
-            
-            /*
-             hitNo = 1;
-             fEventAction->FillVDC_Observables(hitNo, 3, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
-             channelID = 3;
-             G4cout << "Here is the hitNo     -->     "<< hitNo << G4endl;
-             G4cout << "Here is the fEventAction->GetVDC_ObservablesTRIG(1)     -->     "<< fEventAction->GetVDC_ObservablesTRIG(1) << G4endl;
-             
-             if(fEventAction->GetVDC_ObservablesTRIG(1) == channelID)
-             {
-             G4cout << "SUCCESSFUL COMPARISON" << G4endl;
-             }
-             */
-            
-            
-            
-            
+        
             ////    The PRE-point
             if(zPosL<0. && aStep->GetTrack()->GetParentID()==0)
             {
-                //G4cout << "Here we are in the Stepping Action 1" << G4endl;
-
                 fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 0, 0, xPosL);
                 fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 0, 1, yPosL);
                 fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 0, 2, zPosL);
-
-                /*
-                WireplaneTraversePos[WireChamberNo][0][0] = xPosL;
-                WireplaneTraversePos[WireChamberNo][0][1] = yPosL;
-                WireplaneTraversePos[WireChamberNo][0][2] = zPosL;
-                 */
-                
             }
 
             ////    The POST-point
             if(zPosL>0. && aStep->GetTrack()->GetParentID()==0 && fEventAction->GetVDC_WireplaneTraversePOST(WireChamberNo)==false)
             {
-                //G4cout << "Here we are in the Stepping Action 2" << G4endl;
-
                 fEventAction->SetVDC_WireplaneTraversePOST(WireChamberNo, true);
                 
                 fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 1, 0, xPosL);
                 fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 1, 1, yPosL);
                 fEventAction->SetVDC_WireplaneTraversePos(WireChamberNo, 1, 2, zPosL);
-                
-                /*
-                WireplaneTraversePOST[WireChamberNo] = true;
-                WireplaneTraversePos[WireChamberNo][0][0] = xPosL;
-                WireplaneTraversePos[WireChamberNo][0][1] = yPosL;
-                WireplaneTraversePos[WireChamberNo][0][2] = zPosL;
-                */
             }
-            
-            
-            /*
-            void SetVDC_WireplaneTraversePos(G4int WireplaneNumber, G4int i, G4int component, G4double componentPosition)
-            {
-                WireplaneTraversePos[WireplaneNumber][i][component] = componentPosition;
-            }
-            
-            ////    WireplaneTraversePOST[A]
-            ////    A -> Wireplane Number
-            ////    True implies that the POST point has been accounted for, False it is unnacounted for
-            G4bool      WireplaneTraversePOST[4];
-            
-            void SetVDC_WireplaneTraversePOST(G4int WireplaneNumber, G4bool decision)
-            {
-                WireplaneTraversePOST[WireplaneNumber] = decision;
-            }
-            */
-            
-            
-            /*
-             fEventAction->AddEnergy_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE);
-             fEventAction->TagTOF_PADDLE(PADDLENo, PADDLE_ITS, interactiontime);
-             fEventAction->AddEWpositionX_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE*localPosition.x());
-             fEventAction->AddEWpositionY_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE*localPosition.y());
-             //if(fEventAction->Get_PADDLE_Trig(i) == false) fEventAction->Set_PADDLE_Trig(i, true);
-             */
-            
-            
-            
-
         }
     }
     
