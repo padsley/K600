@@ -207,9 +207,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     
     //offset_TIARA_BeamAxis = -131.0000; // mm
     offset_TIARA_BeamAxis = -131.3217600; // mm
-    
-    G4double offset_estimate = -0.24 - 3.;
-    
+        
     //  TIARA 1
     TIARA_Presence[0] = true;
     TIARA_AA_CentrePosition[0] = G4ThreeVector(1.9682273*mm, 0.1740583*mm, offset_TIARA_BeamAxis*mm);

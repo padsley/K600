@@ -399,28 +399,10 @@ void EventAction::EndOfEventAction(const G4Event* event)
     //G4cout << "Here is the ThetaFP[1] (VDC2)     -->     "<< ThetaFP[1] << G4endl;
     
     
-    
     ////    Calculating the "True" positions through which the primary particle traverses the Wirechambers
-    G4double a, b;
     
     for(G4int i=0; i<4; i++)
     {
-        ////    This condition checks if the PRE and POST points for each wireplane have been accounted for
-        ////    PRE point, the last step point before traversing Wireplane
-        ////    POST point, the first step point after traversing Wireplane
-
-        /*
-        if(WireplaneTraversePos[i][0][2]<0.)
-        {
-            G4cout << "Here we are in the Event Action 1" << G4endl;
-        }
-        
-        if(WireplaneTraversePOST[i])
-        {
-            G4cout << "Here we are in the Event Action 2" << G4endl;
-        }
-        */
-        
         if(WireplaneTraversePos[i][0][2]<0. && WireplaneTraversePOST[i])
         {
             //G4cout << "Here we are in the Event Action" << G4endl;
