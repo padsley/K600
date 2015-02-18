@@ -99,8 +99,20 @@ fParticleGun(0)
     
     
     
-    ////////    4He, +1 charge
-    G4int Z = 2, A = 4;
+    ////////    4He, +2 charge
+    //G4int Z = 2, A = 4;
+     
+    //G4double ionCharge   = 2.*eplus;
+    //G4double excitEnergy = 0.*MeV;
+     
+    //G4ParticleDefinition* ion = G4ParticleTable::GetParticleTable()->GetIon(Z,A,excitEnergy);
+    //G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
+    //ion->SetPDGLifeTime(1*ns);
+    //fParticleGun->SetParticleDefinition(ion);
+    //fParticleGun->SetParticleCharge(ionCharge);
+
+    ////////    1H, +1 charge
+    G4int Z = 1, A = 1;
      
     G4double ionCharge   = 1.*eplus;
     G4double excitEnergy = 0.*MeV;
